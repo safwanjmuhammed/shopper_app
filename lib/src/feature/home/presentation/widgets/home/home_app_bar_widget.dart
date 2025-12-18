@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import '../utils/home_constants.dart';
+import '../../utils/home_constants.dart';
 
 class HomeAppBarWidget extends StatelessWidget {
   const HomeAppBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
+    return const Padding(
+      padding: EdgeInsets.all(20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           Icon(
             Icons.menu,
             color: HomeColors.iconColor,

@@ -1,1 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
+import '../utils/home_constants.dart';
 
+part 'home_state.freezed.dart';
+
+@freezed
+class HomeState with _$HomeState {
+  const HomeState._();
+
+  const factory HomeState({
+    @Default([]) List<ProductsResponse> products,
+  }) = _HomeState;
+}

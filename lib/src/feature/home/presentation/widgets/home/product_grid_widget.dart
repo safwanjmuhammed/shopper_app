@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../utils/home_constants.dart';
-import '../screen/product_detail_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
+import '../../../../../config/route/routes.dart';
+import '../../utils/home_constants.dart';
 
-class ProductGrid extends StatelessWidget {
+class ProductGrid extends ConsumerWidget {
   final List<HomeProduct> products;
 
   const ProductGrid({
-    Key? key,
+    super.key,
     required this.products,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(homeProvider);
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -34,20 +38,15 @@ class ProductCard extends StatelessWidget {
   final HomeProduct product;
 
   const ProductCard({
-    Key? key,
+    super.key,
     required this.product,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(product: product),
-          ),
-        );
+        context.pushNamed(Routes.productDetails, extra: {'product': product});
       },
       child: Container(
         decoration: BoxDecoration(
@@ -77,9 +76,15 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                     child: Center(
-                      child: Text(
-                        product.image,
-                        style: const TextStyle(fontSize: 60),
+                      child: Hero(
+                        tag: product.id,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            product.image,
+                            style: const TextStyle(fontSize: 60),
+                          ),
+                        ),
                       ),
                     ),
                   ),
