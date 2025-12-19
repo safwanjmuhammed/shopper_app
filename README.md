@@ -25,8 +25,7 @@ This project follows Clean Architecture principles.
 ##  Add Base url in .env (Required)
 
 
-Add .env file with valid base url following example.env : 
-path : env\example.env
+Add .env file with valid base url following example.env : env\.env
 
 ---
 ##  Run Code Generation (Required)
