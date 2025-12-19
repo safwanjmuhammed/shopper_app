@@ -29,8 +29,8 @@ class AppRouter {
         parentNavigatorKey: _rootKey,
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          final product = extra?['product'] as Product;
-          return ProductDetailScreen(product: product);
+          // final product = extra?['product'] as Product;
+          return const ProductDetailScreen();
         },
       ),
       GoRoute(
@@ -38,7 +38,18 @@ class AppRouter {
         name: Routes.productUpdate,
         parentNavigatorKey: _rootKey,
         builder: (context, state) {
-          return const ProductUpdateScreen();
+          final extra = state.extra as Map<String, dynamic>?;
+          final productId = extra?['productId'] as int;
+          final name = extra?['name'] as String;
+          final description = extra?['description'] as String;
+          final price = extra?['price'] as double;
+
+          return ProductUpdateScreen(
+            productId: productId,
+            name: name,
+            description: description,
+            price: price,
+          );
         },
       ),
     ],

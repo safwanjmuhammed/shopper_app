@@ -34,9 +34,31 @@ class HomeNotifier extends AsyncNotifier<HomeState> {
     state = AsyncValue.data(state.value!.copyWith(selectedImageIndex: index));
   }
 
+// TODO : Awoid unwanted state update
   void storeProduct(Product product) {
     final currentState = state.value;
     if (currentState == null) return;
     state = AsyncValue.data(state.value!.copyWith(product: product));
+  }
+
+  void updateProduct({
+    String? title,
+    String? description,
+    double? price,
+  }) {
+    final currentState = state.value;
+    final existingProduct = currentState?.product;
+
+    if (existingProduct == null) return;
+
+    final updatedProduct = existingProduct.copyWith(
+      title: title ?? existingProduct.title,
+      description: description ?? existingProduct.description,
+      price: price ?? existingProduct.price,
+    );
+
+    state = AsyncValue.data(
+      currentState!.copyWith(product: updatedProduct),
+    );
   }
 }
