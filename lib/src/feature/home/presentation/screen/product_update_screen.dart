@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopper_app/src/common/molicule/app_success_dialog.dart';
 import 'package:shopper_app/src/common/molicule/app_textfield.dart';
@@ -7,6 +8,7 @@ import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import 'package:shopper_app/src/feature/home/presentation/provider/home_state.dart';
 import 'package:shopper_app/src/feature/home/presentation/utils/home_constants.dart';
+import 'package:shopper_app/src/feature/home/presentation/widgets/home/product_grid_widget.dart';
 
 class ProductUpdateScreen extends ConsumerStatefulWidget {
   const ProductUpdateScreen({
@@ -74,7 +76,8 @@ class _ProductUpdateScreenState extends ConsumerState<ProductUpdateScreen> {
           title: 'Success!',
           message: 'Product updated successfully',
           onConfirm: () {
-            Navigator.of(context).pop();
+            context.pop();
+            context.pop();
           },
         ),
       );

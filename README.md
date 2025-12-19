@@ -1,16 +1,46 @@
-# shopper_app
+# 🛍️ Shopper App
 
-A new Flutter project.
+A modern Flutter application built using **Clean Architecture**, **Riverpod**, and **Dio**, focusing on scalability, maintainability, and clean state management.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- Product listing and detail view
+- Hero animations
+- Clean Architecture (Data / Domain / Presentation)
+- State management with Riverpod
+- API integration using Dio
+- Code generation using Freezed & JsonSerializable
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project Architecture
+
+This project follows Clean Architecture principles.
+
+
+---
+
+##  Run Code Generation (Required)
+
+This project uses Freezed and JsonSerializable.
+
+Run before first build:
+
+```
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+This project uses **FVM** to manage the Flutter SDK version.
+
+Run the app using:
+
+```
+fvm flutter run
+```
+## Author
+
+Safwan J Muhammed
+
+
