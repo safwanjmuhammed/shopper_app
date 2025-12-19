@@ -6,7 +6,9 @@ class DioServiceInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    throw UnimplementedError();
+    print('Request: ${options.method} ${options.path}');
+    print('Headers: ${options..path}');
+    print('url: ${options.baseUrl + options.path}');
     super.onRequest(options, handler);
   }
 

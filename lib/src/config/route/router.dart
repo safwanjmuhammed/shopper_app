@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopper_app/src/config/route/routes.dart';
+import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import 'package:shopper_app/src/feature/home/presentation/screen/home_screen.dart';
 import 'package:shopper_app/src/feature/home/presentation/utils/home_constants.dart';
 import 'package:shopper_app/src/feature/home/presentation/screen/product_detail_screen.dart';
@@ -27,7 +28,7 @@ class AppRouter {
         parentNavigatorKey: _rootKey,
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          final product = extra?['product'] as HomeProduct;
+          final product = extra?['product'] as Product;
           return ProductDetailScreen(product: product);
         },
       ),

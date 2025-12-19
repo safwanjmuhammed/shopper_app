@@ -9,6 +9,6 @@ class HomeState with _$HomeState {
   const HomeState._();
 
   const factory HomeState({
-    @Default([]) List<ProductsResponse> products,
+    @Default([]) List<Product> products,
   }) = _HomeState;
 }

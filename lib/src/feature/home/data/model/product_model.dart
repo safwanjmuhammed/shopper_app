@@ -6,7 +6,7 @@ part 'product_model.g.dart';
 @freezed
 class ProductsResponse with _$ProductsResponse {
   const factory ProductsResponse({
-    List<Product>? products,
+    Product? products,
   }) = _ProductsResponse;
 
   factory ProductsResponse.fromJson(Map<String, dynamic> json) =>

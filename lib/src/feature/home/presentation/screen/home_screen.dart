@@ -13,24 +13,24 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final products = getHomeProducts();
-    ref.read(homeRemoteDataSourceProvider).getProducts();
 
-    return Scaffold(
+    return const Scaffold(
+      floatingActionButton: Icon(Icons.add),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            const HomeAppBarWidget(),
+            HomeAppBarWidget(),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const HomeHeaderSection(),
-                      const SizedBox(height: 24),
-                      ProductGrid(products: products),
+                      HomeHeaderSection(),
+                      SizedBox(height: 24),
+                      ProductGrid(),
                     ],
                   ),
                 ),

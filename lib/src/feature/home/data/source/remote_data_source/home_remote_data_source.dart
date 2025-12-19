@@ -19,17 +19,18 @@ class HomeRemoteDataSource implements IHomeRemoteDataSource {
   IApiService api;
 
   @override
-  Future<List<ProductsResponse>?> getProducts() async {
+  Future<List<Product>?> getProducts() async {
     try {
       final response = await api.get(Endpoints.products);
-      print('Product response $response');
+      print('Response: ${response.data}');
+
       final rawProducts = response.data['products'];
-      final products = [] as List<ProductsResponse>;
+      final List<Product> products = [];
+
       if (response.statusCode == StatusCodes.success) {
         for (var item in rawProducts) {
-          products.add(ProductsResponse.fromJson(item));
+          products.add(Product.fromJson(item));
         }
-        print('Product list $products');
         return products;
       }
     } on DioException catch (e) {

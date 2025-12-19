@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopper_app/src/common/widgets/primary_button.dart';
+import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import '../utils/home_constants.dart';
 import '../widgets/product_detail_header.dart';
 
+// Note : avoiding unwanted product detaials api call.
+// we are using product model from home screen to avoid api call.
 class ProductDetailScreen extends StatelessWidget {
-  final HomeProduct product;
+  final Product product;
 
   const ProductDetailScreen({
     super.key,
@@ -37,20 +40,18 @@ class ProductDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             ProductDetailHeader(product: product),
-
             // Content
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title & Tag
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Text(
-                          product.name,
+                          product.title ?? '',
                           style: GoogleFonts.outfit(
                             fontSize: 28,
                             fontWeight: FontWeight.w800,
@@ -59,24 +60,24 @@ class ProductDetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (product.isSale)
-                        Container(
-                          margin: const EdgeInsets.only(top: 4, left: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: HomeColors.pinkTag,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            'Best Seller',
-                            style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
+                      // if (product.isSale)
+                      //   Container(
+                      //     margin: const EdgeInsets.only(top: 4, left: 8),
+                      //     padding: const EdgeInsets.symmetric(
+                      //         horizontal: 8, vertical: 4),
+                      //     decoration: BoxDecoration(
+                      //       color: HomeColors.pinkTag,
+                      //       borderRadius: BorderRadius.circular(4),
+                      //     ),
+                      //     child: Text(
+                      //       'Best Seller',
+                      //       style: GoogleFonts.inter(
+                      //         color: Colors.white,
+                      //         fontSize: 10,
+                      //         fontWeight: FontWeight.w600,
+                      //       ),
+                      //     ),
+                      //   ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -102,7 +103,7 @@ class ProductDetailScreen extends StatelessWidget {
 
                   // Description
                   Text(
-                    product.description,
+                    product.description ?? '',
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       color: HomeColors.textSecondary,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import '../utils/home_constants.dart';
 
 class ProductDetailHeader extends StatelessWidget {
-  final HomeProduct product;
+  final Product product;
 
   const ProductDetailHeader({
     super.key,
@@ -16,7 +17,6 @@ class ProductDetailHeader extends StatelessWidget {
       padding: const EdgeInsets.only(top: 24),
       child: Stack(
         children: [
-          // Background & Curve
           ClipPath(
             clipper: HeaderCurveClipper(),
             child: Container(
@@ -25,7 +25,6 @@ class ProductDetailHeader extends StatelessWidget {
               color: HomeColors.productDetailBackground,
             ),
           ),
-          // Back Button
           Positioned(
             top: 50,
             left: 20,
@@ -61,7 +60,6 @@ class ProductDetailHeader extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          // Thumbnails
           Positioned(
             top: 100,
             right: 20,
@@ -75,14 +73,13 @@ class ProductDetailHeader extends StatelessWidget {
               ],
             ),
           ),
-          // Main Image
           Positioned(
             top: 60,
             left: 0,
             right: 0,
             child: Center(
               child: Hero(
-                tag: product.id,
+                tag: 'product_${product.id}',
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
@@ -93,9 +90,10 @@ class ProductDetailHeader extends StatelessWidget {
                       color: Colors.white.withOpacity(0.2),
                     ),
                     child: Center(
-                      child: Text(
-                        product.image,
-                        style: const TextStyle(fontSize: 140),
+                      child: Image.network(
+                        fit: BoxFit.cover,
+                        product.images?.first ?? '',
+                        height: 150,
                       ),
                     ),
                   ),
@@ -103,12 +101,11 @@ class ProductDetailHeader extends StatelessWidget {
               ),
             ),
           ),
-          // Price
           Positioned(
             bottom: 30,
             left: 24,
             child: Text(
-              '\$ ${product.price.toStringAsFixed(2)}',
+              '\$ ${product.price}',
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -140,7 +137,7 @@ class HeaderCurveClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(0, size.height - 50);
-    // S-curve like shape
+    // s-curve
     path.quadraticBezierTo(
         size.width * 0.25, size.height, size.width * 0.5, size.height - 30);
     path.quadraticBezierTo(

@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 /// The [AppConfig] class provides methods to load and access environment variables
 /// from a `.env` file using the `flutter_dotenv` package.
 class AppConfig {
+  static const String baseUrl = 'https://dummyjson.com/';
+
   static Future<void> loadEnv() async {
     try {
       await dotenv.load(fileName: 'env/.env');

@@ -2,40 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import '../../../../../config/route/routes.dart';
 import '../../utils/home_constants.dart';
 
 class ProductGrid extends ConsumerWidget {
-  final List<HomeProduct> products;
-
-  const ProductGrid({
-    super.key,
-    required this.products,
-  });
+  const ProductGrid({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homeProvider);
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.7,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        return ProductCard(product: products[index]);
-      },
-    );
+    return state.when(data: (state) {
+      print('product: $state');
+      return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.7,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: state.products.length,
+        itemBuilder: (context, index) {
+          final product = state.products;
+          return ProductCard(product: product[index]);
+        },
+      );
+    }, error: (error, _) {
+      print('error: $error');
+      return const SizedBox.shrink();
+    }, loading: () {
+      return const Center(
+          child: Padding(
+        padding: EdgeInsets.only(top: 30),
+        child: CircularProgressIndicator(),
+      ));
+    });
   }
 }
 
 class ProductCard extends StatelessWidget {
-  final HomeProduct product;
+  final Product product;
 
   const ProductCard({
     super.key,
@@ -44,6 +53,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('product: $product');
     return GestureDetector(
       onTap: () {
         context.pushNamed(Routes.productDetails, extra: {'product': product});
@@ -77,12 +87,14 @@ class ProductCard extends StatelessWidget {
                     ),
                     child: Center(
                       child: Hero(
-                        tag: product.id,
+                        tag: 'product_${product.id}',
                         child: Material(
                           color: Colors.transparent,
-                          child: Text(
-                            product.image,
-                            style: const TextStyle(fontSize: 60),
+                          child: SizedBox(
+                            height: 100,
+                            child: Image.network(
+                              product.images?.first ?? '',
+                            ),
                           ),
                         ),
                       ),
@@ -111,29 +123,29 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (product.isSale)
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: HomeColors.saleTag,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          'SALE',
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
+                  // if (product.isSale)
+                  //   Positioned(
+                  //     top: 8,
+                  //     left: 8,
+                  //     child: Container(
+                  //       padding: const EdgeInsets.symmetric(
+                  //         horizontal: 8,
+                  //         vertical: 4,
+                  //       ),
+                  //       decoration: BoxDecoration(
+                  //         color: HomeColors.saleTag,
+                  //         borderRadius: BorderRadius.circular(12),
+                  //       ),
+                  //       child: Text(
+                  //         'SALE',
+                  //         style: GoogleFonts.inter(
+                  //           fontSize: 10,
+                  //           fontWeight: FontWeight.w600,
+                  //           color: Colors.white,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
                 ],
               ),
             ),
@@ -143,7 +155,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.name,
+                    product.title ?? '',
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -154,7 +166,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    product.description,
+                    product.description ?? '',
                     style: GoogleFonts.inter(
                       fontSize: 11,
                       color: HomeColors.textSecondary,
@@ -165,7 +177,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '\$ ${product.price.toStringAsFixed(2)}',
+                    '\$ ${product.price?.toStringAsFixed(2)}',
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
