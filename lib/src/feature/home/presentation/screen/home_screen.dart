@@ -13,12 +13,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        ref.read(homeRemoteDataSourceProvider).updateProduct(const Product());
-      }),
+    return const Scaffold(
       backgroundColor: Colors.white,
-      body: const SafeArea(
+      body: SafeArea(
         child: Column(
           children: [
             HomeAppBarWidget(),
