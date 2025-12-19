@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopper_app/src/common/widgets/primary_button.dart';
+import 'package:shopper_app/src/common/atom/primary_button.dart';
+
+import 'package:shopper_app/src/config/route/routes.dart';
 import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
+import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import '../utils/home_constants.dart';
 import '../widgets/product_detail_header.dart';
 
 // Note : avoiding unwanted product detaials api call.
 // we are using product model from home screen to avoid api call.
-class ProductDetailScreen extends StatelessWidget {
+// TO:DO
+// Replace [product] with [state.value?.product] for state updates
+class ProductDetailScreen extends ConsumerWidget {
   final Product product;
 
   const ProductDetailScreen({
@@ -16,7 +23,8 @@ class ProductDetailScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(homeProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Container(
@@ -29,9 +37,9 @@ class ProductDetailScreen extends StatelessWidget {
           ),
         ),
         child: PrimaryButton(
-          text: 'ADD TO CART',
+          text: 'EDIT PRODUCT',
           icon: Icons.shopping_cart_outlined,
-          onPressed: () {},
+          onPressed: () => context.pushNamed(Routes.productUpdate),
           backgroundColor: HomeColors.purpleDark,
           borderRadius: 16,
         ),
@@ -39,7 +47,7 @@ class ProductDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ProductDetailHeader(product: product),
+            ProductDetailHeader(product: state.value?.product),
             // Content
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -60,24 +68,6 @@ class ProductDetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // if (product.isSale)
-                      //   Container(
-                      //     margin: const EdgeInsets.only(top: 4, left: 8),
-                      //     padding: const EdgeInsets.symmetric(
-                      //         horizontal: 8, vertical: 4),
-                      //     decoration: BoxDecoration(
-                      //       color: HomeColors.pinkTag,
-                      //       borderRadius: BorderRadius.circular(4),
-                      //     ),
-                      //     child: Text(
-                      //       'Best Seller',
-                      //       style: GoogleFonts.inter(
-                      //         color: Colors.white,
-                      //         fontSize: 10,
-                      //         fontWeight: FontWeight.w600,
-                      //       ),
-                      //     ),
-                      //   ),
                     ],
                   ),
                   const SizedBox(height: 8),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shopper_app/src/config/route/routes.dart';
 import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import 'package:shopper_app/src/feature/home/presentation/screen/home_screen.dart';
+import 'package:shopper_app/src/feature/home/presentation/screen/product_update_screen.dart';
 import 'package:shopper_app/src/feature/home/presentation/utils/home_constants.dart';
 import 'package:shopper_app/src/feature/home/presentation/screen/product_detail_screen.dart';
 
@@ -30,6 +31,14 @@ class AppRouter {
           final extra = state.extra as Map<String, dynamic>?;
           final product = extra?['product'] as Product;
           return ProductDetailScreen(product: product);
+        },
+      ),
+      GoRoute(
+        path: '/product-update',
+        name: Routes.productUpdate,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) {
+          return const ProductUpdateScreen();
         },
       ),
     ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
 import 'package:shopper_app/src/feature/home/data/source/remote_data_source/home_remote_data_source.dart';
 import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import '../utils/home_constants.dart';
@@ -12,12 +13,12 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final products = getHomeProducts();
-
-    return const Scaffold(
-      floatingActionButton: Icon(Icons.add),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        ref.read(homeRemoteDataSourceProvider).updateProduct(const Product());
+      }),
       backgroundColor: Colors.white,
-      body: SafeArea(
+      body: const SafeArea(
         child: Column(
           children: [
             HomeAppBarWidget(),

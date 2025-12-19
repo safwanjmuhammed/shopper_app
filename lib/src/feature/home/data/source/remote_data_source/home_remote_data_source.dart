@@ -22,7 +22,6 @@ class HomeRemoteDataSource implements IHomeRemoteDataSource {
   Future<List<Product>?> getProducts() async {
     try {
       final response = await api.get(Endpoints.products);
-      print('Response: ${response.data}');
 
       final rawProducts = response.data['products'];
       final List<Product> products = [];
@@ -38,5 +37,37 @@ class HomeRemoteDataSource implements IHomeRemoteDataSource {
       return null;
     }
     return null;
+  }
+
+  @override
+  Future<void> updateProduct(Product product) async {
+    try {
+      final data = {
+        "title": "Eyeshadow Palette with Mirror - Updated",
+        "price": 29.99,
+        "description": "Updated description",
+      };
+
+      final response = await api.put(
+        Endpoints.productDetails('1'),
+        data: data,
+      );
+
+      if (kDebugMode) {
+        print('STATUS: ${response.statusCode}');
+        print('RESPONSE: ${response.data}');
+      }
+    } on DioException catch (e) {
+      if (kDebugMode) {
+        print('DIO ERROR');
+        print('STATUS: ${e.response?.statusCode}');
+        print('DATA: ${e.response?.data}');
+        print('MESSAGE: ${e.message}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('UNKNOWN ERROR: $e');
+      }
+    }
   }
 }

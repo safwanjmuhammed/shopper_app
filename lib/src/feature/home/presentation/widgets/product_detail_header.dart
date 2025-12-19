@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
+import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import '../utils/home_constants.dart';
 
 class ProductDetailHeader extends StatelessWidget {
-  final Product product;
+  final Product? product;
 
   const ProductDetailHeader({
     super.key,
-    required this.product,
+    this.product,
   });
 
   @override
@@ -60,26 +62,37 @@ class ProductDetailHeader extends StatelessWidget {
               color: Colors.black,
             ),
           ),
-          Positioned(
-            top: 100,
-            right: 20,
-            child: Column(
-              children: [
-                _buildThumbnail(Icons.headset, true),
-                const SizedBox(height: 12),
-                _buildThumbnail(Icons.headset_mic, false),
-                const SizedBox(height: 12),
-                _buildThumbnail(Icons.headphones, false),
-              ],
-            ),
-          ),
+          Consumer(builder: (context, ref, child) {
+            final selectedImageIndex = ref.watch(homeProvider
+                .select((value) => value.value?.selectedImageIndex));
+            return Positioned(
+              top: 100,
+              right: 20,
+              child: Column(
+                children: List.generate(
+                  product?.images?.length ?? 0,
+                  (index) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: GestureDetector(
+                        onTap: () => ref
+                            .read(homeProvider.notifier)
+                            .setSelectedImageIndex(index),
+                        child: _buildThumbnail(
+                            Icons.headset,
+                            selectedImageIndex == index,
+                            product?.images?[index] ?? ''),
+                      )),
+                ),
+              ),
+            );
+          }),
           Positioned(
             top: 60,
             left: 0,
             right: 0,
             child: Center(
               child: Hero(
-                tag: 'product_${product.id}',
+                tag: 'product_${product?.id}',
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
@@ -92,7 +105,7 @@ class ProductDetailHeader extends StatelessWidget {
                     child: Center(
                       child: Image.network(
                         fit: BoxFit.cover,
-                        product.images?.first ?? '',
+                        product?.images?.first ?? '',
                         height: 150,
                       ),
                     ),
@@ -105,7 +118,7 @@ class ProductDetailHeader extends StatelessWidget {
             bottom: 30,
             left: 24,
             child: Text(
-              '\$ ${product.price}',
+              '\$ ${product?.price}',
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -118,16 +131,19 @@ class ProductDetailHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildThumbnail(IconData icon, bool isSelected) {
+  Widget _buildThumbnail(IconData icon, bool isSelected, String imageUrl) {
     return Container(
-      width: 48,
-      height: 48,
+      width: 55,
+      height: 55,
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: isSelected ? const Color(0xFFC4F0E2) : const Color(0xFFF2E6FF),
         borderRadius: BorderRadius.circular(12),
-        border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
+        border: isSelected ? Border.all(color: Colors.black, width: 2) : null,
       ),
-      child: Icon(icon, size: 20, color: Colors.black87),
+      child: Image.network(
+        imageUrl,
+      ),
     );
   }
 }

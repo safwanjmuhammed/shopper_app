@@ -10,5 +10,7 @@ class HomeState with _$HomeState {
 
   const factory HomeState({
     @Default([]) List<Product> products,
+    Product? product,
+    @Default(0) int selectedImageIndex,
   }) = _HomeState;
 }
