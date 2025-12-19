@@ -5,26 +5,24 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shopper_app/src/common/atom/primary_button.dart';
 
 import 'package:shopper_app/src/config/route/routes.dart';
-import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
+
 import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import '../utils/home_constants.dart';
 import '../widgets/product_detail_header.dart';
 
 // Note : avoiding unwanted product detaials api call.
 // we are using product model from home screen to avoid api call.
-// TO:DO
-// Replace [product] with [state.value?.product] for state updates
-class ProductDetailScreen extends ConsumerWidget {
-  final Product product;
 
+class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({
     super.key,
-    required this.product,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(homeProvider);
+    final productState =
+        ref.watch(homeProvider.select((state) => state.value?.product));
+
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: Container(
@@ -39,7 +37,15 @@ class ProductDetailScreen extends ConsumerWidget {
         child: PrimaryButton(
           text: 'EDIT PRODUCT',
           icon: Icons.shopping_cart_outlined,
-          onPressed: () => context.pushNamed(Routes.productUpdate),
+          onPressed: () {
+            final extra = {
+              'name': productState?.title,
+              'description': productState?.description,
+              'price': productState?.price,
+              'productId': productState?.id,
+            };
+            context.pushNamed(Routes.productUpdate, extra: extra);
+          },
           backgroundColor: HomeColors.purpleDark,
           borderRadius: 16,
         ),
@@ -47,7 +53,7 @@ class ProductDetailScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ProductDetailHeader(product: state.value?.product),
+            ProductDetailHeader(product: productState),
             // Content
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -59,7 +65,7 @@ class ProductDetailScreen extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          product.title ?? '',
+                          productState?.title ?? '',
                           style: GoogleFonts.outfit(
                             fontSize: 28,
                             fontWeight: FontWeight.w800,
@@ -93,7 +99,7 @@ class ProductDetailScreen extends ConsumerWidget {
 
                   // Description
                   Text(
-                    product.description ?? '',
+                    productState?.description ?? '',
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       color: HomeColors.textSecondary,

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shopper_app/src/common/molicule/app_success_dialog.dart';
 import 'package:shopper_app/src/common/molicule/app_textfield.dart';
 import 'package:shopper_app/src/feature/home/data/model/product_model.dart';
+import 'package:shopper_app/src/feature/home/data/source/remote_data_source/home_remote_data_source.dart';
 import 'package:shopper_app/src/feature/home/presentation/provider/home_provider.dart';
 import 'package:shopper_app/src/feature/home/presentation/provider/home_state.dart';
 import 'package:shopper_app/src/feature/home/presentation/utils/home_constants.dart';
@@ -13,7 +16,16 @@ import 'package:shopper_app/src/feature/home/presentation/widgets/home/product_g
 class ProductUpdateScreen extends ConsumerStatefulWidget {
   const ProductUpdateScreen({
     super.key,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.productId,
   });
+
+  final String name;
+  final String description;
+  final double price;
+  final int productId;
 
   @override
   ConsumerState<ProductUpdateScreen> createState() =>
@@ -30,28 +42,9 @@ class _ProductUpdateScreenState extends ConsumerState<ProductUpdateScreen> {
   void initState() {
     super.initState();
 
-    _nameController = TextEditingController();
-    _descriptionController = TextEditingController();
-    _priceController = TextEditingController();
-
-    ref.listenManual<AsyncValue<HomeState>>(
-      homeProvider,
-      (previous, next) {
-        print('${next.value}bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
-        final product = next.value?.product;
-        if (product == null) return;
-
-        if (_nameController.text.isEmpty) {
-          _nameController.text = product.title ?? '';
-        }
-        if (_descriptionController.text.isEmpty) {
-          _descriptionController.text = product.description ?? '';
-        }
-        if (_priceController.text.isEmpty) {
-          _priceController.text = product.price?.toString() ?? '';
-        }
-      },
-    );
+    _nameController = TextEditingController(text: widget.name);
+    _descriptionController = TextEditingController(text: widget.description);
+    _priceController = TextEditingController(text: widget.price.toString());
   }
 
   @override
@@ -62,25 +55,41 @@ class _ProductUpdateScreenState extends ConsumerState<ProductUpdateScreen> {
     super.dispose();
   }
 
-  void _handleUpdate() {
+  // TO:DO
+  // call product update endpoint and pass needed [Product] data from state.
+  // On success Update the state with the new product data , show success dailog and call context.pop();
+  //
+  void _handleUpdate() async {
     if (_formKey.currentState!.validate()) {
-      // TO:DO
-      // call product update endpoint and pass needed [Product] data from state.
-      // On success Update the state with the new product data , show success dailog and call context.pop();
-      //
+      try {
+        final success =
+            await ref.read(homeRemoteDataSourceProvider).updateProduct(Product(
+                  id: widget.productId,
+                  title: _nameController.text,
+                  description: _descriptionController.text,
+                  price: double.tryParse(_priceController.text),
+                ));
+        if (success) {
+          ref.read(homeProvider.notifier).updateProduct(
+              title: _nameController.text,
+              description: _descriptionController.text,
+              price: double.tryParse(_priceController.text));
+          if (!mounted) return;
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AppSuccessDialog(
-          title: 'Success!',
-          message: 'Product updated successfully',
-          onConfirm: () {
-            context.pop();
-            context.pop();
-          },
-        ),
-      );
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AppSuccessDialog(
+              title: 'Success!',
+              message: 'Product updated successfully',
+              onConfirm: () {
+                context.pop();
+                context.pop();
+              },
+            ),
+          );
+        }
+      } finally {}
     }
   }
 
