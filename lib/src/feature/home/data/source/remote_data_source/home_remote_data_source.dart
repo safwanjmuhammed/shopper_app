@@ -40,7 +40,7 @@ class HomeRemoteDataSource implements IHomeRemoteDataSource {
   }
 
   @override
-  Future<void> updateProduct(Product product) async {
+  Future<bool> updateProduct(Product product) async {
     try {
       final data = {
         "title": "Eyeshadow Palette with Mirror - Updated",
@@ -49,14 +49,13 @@ class HomeRemoteDataSource implements IHomeRemoteDataSource {
       };
 
       final response = await api.put(
-        Endpoints.productDetails('1'),
+        Endpoints.productDetails(product.id.toString()),
         data: data,
       );
-
-      if (kDebugMode) {
-        print('STATUS: ${response.statusCode}');
-        print('RESPONSE: ${response.data}');
+      if (response.statusCode == StatusCodes.success) {
+        return true;
       }
+      return false;
     } on DioException catch (e) {
       if (kDebugMode) {
         print('DIO ERROR');
@@ -64,10 +63,12 @@ class HomeRemoteDataSource implements IHomeRemoteDataSource {
         print('DATA: ${e.response?.data}');
         print('MESSAGE: ${e.message}');
       }
+      return false;
     } catch (e) {
       if (kDebugMode) {
         print('UNKNOWN ERROR: $e');
       }
+      return false;
     }
   }
 }
