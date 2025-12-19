@@ -22,6 +22,13 @@ This project follows Clean Architecture principles.
 
 ---
 
+##  Add Base url in .env (Required)
+
+
+Add .env file with valid base url following example.env : 
+path : env\example.env
+
+---
 ##  Run Code Generation (Required)
 
 This project uses Freezed and JsonSerializable.
